@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>WTD 골프 소비자 화면 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--red:#FF5250;--ink:#15171A;--ink2:#4A4F57;--bg:#F2F3F5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased}
+.head{max-width:1180px;margin:0 auto;padding:22px 16px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between}
+.head h1{margin:0;font-size:22px;letter-spacing:-.02em}
+.head h1 b{color:var(--red)}
+.head p{margin:4px 0 0;color:var(--ink2);font-size:14px}
+.tabs{display:flex;gap:6px;background:#E1E3E7;padding:4px;border-radius:12px}
+.tabs button{border:0;background:transparent;padding:10px 16px;border-radius:9px;font:inherit;font-weight:700;font-size:14.5px;color:var(--ink2);cursor:pointer}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+iframe{display:block;width:100%;border:0;background:var(--bg);height:1500px}
+iframe[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="head">
+  <div>
+    <h1>WTD<b>.</b> 골프 소비자 화면 시안</h1>
+    <p>자사몰 모바일 화면을 직접 눌러 보는 시뮬레이션. 두 화면은 「자주 가는 골프장」으로 서로 이어짐</p>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="on" data-app="light">골프장 빛 지도</button>
+    <button data-app="owner">정품 등록 · 오너 카드</button>
+  </div>
+</div>
+<iframe id="f-light" title="골프장 빛 지도 시안"></iframe>
+<iframe id="f-owner" title="정품 등록 · 오너 카드 시안" hidden></iframe>
+
+<script type="text/plain" id="src-light"><!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>골프장 빛 지도 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --red:#FF5250; --ink:#15171A; --ink2:#4A4F57; --ink3:#868C95; --line:#E4E6EA;
+  --bg:#F2F3F5; --card:#FFFFFF; --soft:#F7F8FA;
+  --bright:#F6C9D6; --mid:#CDD2D9; --dark:#5B6069;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,"Pretendard Variable","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit}
+
+/* 바깥 틀 */
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 48px}
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px}
+.top h1{margin:0;font-size:22px;letter-spacing:-.02em}
+.top p{margin:4px 0 0;color:var(--ink2)}
+.banner{background:#FFF4E5;border:1px solid #F5D9A8;color:#7A5212;border-radius:8px;padding:8px 12px;font-size:12.5px;margin-bottom:16px}
+.switch{display:flex;gap:6px;background:#E6E8EC;padding:4px;border-radius:10px}
+.switch button{border:0;background:transparent;padding:8px 14px;border-radius:7px;font-weight:600;color:var(--ink2)}
+.switch button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.toggle{display:flex;align-items:center;gap:6px;color:var(--ink2);font-size:13px;user-select:none}
+.layout{display:grid;grid-template-columns:410px 1fr;gap:28px;align-items:start}
+
+/* 휴대폰 */
+.phone{width:410px;height:820px;border:10px solid #121315;border-radius:46px;background:#fff;overflow:hidden;position:relative;box-shadow:0 20px 40px rgba(20,22,26,.18)}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:24px;background:#121315;border-radius:0 0 14px 14px;z-index:5}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+.view{display:none}.view.on{display:block}
+
+/* 앱 머리 */
+.appbar{position:sticky;top:0;z-index:4;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:30px 18px 10px;display:flex;align-items:center;gap:10px}
+.logo{font-weight:900;letter-spacing:.06em;font-size:18px}
+.logo b{color:var(--red)}
+.appbar .crumb{color:var(--ink3);font-size:12.5px}
+.appbar .back{border:0;background:none;padding:0 4px 0 0;font-size:20px;line-height:1}
+
+/* 공통 */
+.sec{padding:18px}
+.hero{background:linear-gradient(160deg,#16181C 0%,#2A2D33 70%,#3A2F2F 100%);color:#fff;padding:22px 18px 20px;position:relative;overflow:hidden}
+.hero h2{margin:0 0 6px;font-size:23px;letter-spacing:-.02em}
+.hero p{margin:0;color:#C9CDD3;font-size:13.5px}
+.hero .sun{position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,#FFB27A 0%,rgba(255,82,80,.55) 45%,rgba(255,82,80,0) 70%)}
+.search{margin-top:14px;display:flex;align-items:center;gap:8px;background:#fff;border-radius:10px;padding:10px 12px;color:var(--ink)}
+.search input{border:0;outline:0;flex:1;min-width:0;font-size:14.5px;background:transparent}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;color:var(--ink2)}
+.chip.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.lbl{font-size:12px;color:var(--ink3);font-weight:600;margin:0 0 8px;letter-spacing:.02em}
+.list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--line);background:none;border-left:0;border-right:0;border-top:0;text-align:left;width:100%}
+.row .nm{font-weight:700;font-size:15px}
+.row .sub{color:var(--ink3);font-size:12.5px}
+.row .go{margin-left:auto;color:var(--ink3)}
+.dot{width:30px;height:30px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.06)}
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:6px;padding:2px 7px;font-size:11.5px;font-weight:700}
+.b-forest{background:#E7F3EA;color:#2C6B3C}
+.b-inland{background:#F3EFE4;color:#7A6020}
+.b-coast{background:#E5F0F8;color:#245A82}
+.b-ok{background:#FFECEC;color:#C8302E}
+.b-wait{background:#F0F1F3;color:#6B7079}
+.empty{color:var(--ink3);padding:14px 0}
+
+/* 상세 */
+.dhead h2{margin:6px 0 2px;font-size:22px;letter-spacing:-.02em}
+.dhead .sub{color:var(--ink3);font-size:13px}
+.dhead .desc{margin:10px 0 0;color:var(--ink2);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.soft{background:var(--soft);border-color:transparent}
+.dayhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dayhead input{border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12.5px;color:var(--ink2)}
+.bar{display:flex;height:46px;border-radius:10px;overflow:hidden;position:relative}
+.seg{border:0;padding:0;position:relative;display:flex;align-items:flex-end;justify-content:center;font-size:10.5px;font-weight:700;color:rgba(0,0,0,.6);padding-bottom:4px;transition:filter .15s}
+.seg.lv-dark{color:rgba(255,255,255,.9)}
+.seg.sel{box-shadow:inset 0 0 0 3px var(--ink)}
+.seg:hover{filter:brightness(.96)}
+.now{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--red);pointer-events:none}
+.now::after{content:"지금";position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--red);font-weight:700;white-space:nowrap}
+.ticks{display:flex;justify-content:space-between;color:var(--ink3);font-size:11.5px;margin-top:6px}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0 0}
+.slot{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 4px;font-size:12.5px;font-weight:600;color:var(--ink2);line-height:1.3}
+.slot small{display:block;font-weight:500;color:var(--ink3);font-size:11px}
+.slot.on{border-color:var(--ink);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.rec h3{margin:0;font-size:18px;letter-spacing:-.01em}
+.rec .why{margin:6px 0 0;color:var(--ink2);font-size:13.5px}
+.scale{margin:14px 0 4px;position:relative;height:10px;border-radius:999px;background:linear-gradient(90deg,#FBE3EA 0%,#E9E2F6 22%,#DADDE2 50%,#B9BEC6 68%,#4E535B 100%)}
+.scale .pin{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--ink);transform:translate(-50%,-50%);transition:left .25s}
+.scale-l{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3)}
+.tip{display:flex;gap:8px;background:#FFF6F0;border-radius:10px;padding:10px 12px;color:#7A3B1A;font-size:13px;margin-top:12px}
+.prods{display:grid;gap:8px;margin-top:12px}
+.prod{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.lens{width:52px;height:30px;border-radius:15px 15px 18px 18px/12px 12px 18px 18px;flex:none;position:relative;box-shadow:inset 0 -3px 6px rgba(0,0,0,.12)}
+.lens::after{content:"";position:absolute;left:8px;top:5px;width:18px;height:6px;border-radius:6px;background:rgba(255,255,255,.55);transform:rotate(-8deg)}
+.prod>span:nth-child(2){flex:1;min-width:0}
+.prod .t{font-weight:700}
+.prod .s{color:var(--ink3);font-size:12px}
+.prod .cta{margin-left:auto;border:0;background:var(--ink);color:#fff;border-radius:8px;padding:7px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.prod.alt .cta{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.fine{color:var(--ink3);font-size:12px;line-height:1.55}
+.fine a{color:var(--ink2)}
+.share{display:flex;gap:8px;margin-top:12px}
+.share button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-weight:600;font-size:13px}
+.share button.pri{background:var(--red);border-color:var(--red);color:#fff}
+
+/* 추천 문항 */
+.prog{display:flex;gap:4px;margin:4px 0 16px}
+.prog i{flex:1;height:4px;border-radius:2px;background:#E5E7EB}
+.prog i.on{background:var(--red)}
+.qn{color:var(--red);font-weight:800;font-size:12.5px;letter-spacing:.04em}
+.qt{margin:4px 0 4px;font-size:21px;letter-spacing:-.02em;line-height:1.35}
+.qs{margin:0 0 16px;color:var(--ink3);font-size:13px}
+.opts{display:grid;gap:8px}
+.opt{border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 14px;text-align:left;display:flex;align-items:center;gap:12px}
+.opt .ic{width:34px;height:34px;border-radius:10px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:17px;flex:none}
+.opt .t{font-weight:700;font-size:14.5px}
+.opt .s{color:var(--ink3);font-size:12.5px}
+.opt.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.qsearch{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+.qsearch input{border:0;outline:0;flex:1;min-width:0;font-size:14.5px}
+.hits{display:grid;gap:6px;margin-bottom:14px}
+.hit{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;text-align:left;display:flex;align-items:center;gap:8px}
+.hit.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.or{display:flex;align-items:center;gap:8px;color:var(--ink3);font-size:12px;margin:12px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.qnav{display:flex;gap:8px;margin-top:18px}
+.qnav button{flex:1;border-radius:12px;padding:13px;font-weight:700;border:1px solid var(--line);background:#fff}
+.qnav .next{background:var(--ink);color:#fff;border-color:var(--ink)}
+.qnav .next:disabled{background:#C9CCD1;border-color:#C9CCD1;cursor:default}
+.res-hero{border-radius:16px;padding:18px;color:var(--ink);position:relative;overflow:hidden}
+.res-hero .k{font-size:12.5px;font-weight:700;opacity:.75}
+.res-hero h3{margin:4px 0 2px;font-size:24px;letter-spacing:-.02em}
+.res-hero .lens{position:absolute;right:16px;top:18px;width:74px;height:42px}
+.reasons{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.reasons li{display:flex;gap:10px;font-size:13.5px;color:var(--ink2)}
+.reasons li b{color:var(--ink)}
+.reasons .n{flex:none;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.link{border:0;background:none;color:var(--red);font-weight:700;padding:0;font-size:13.5px}
+.obox{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.obox .ic{width:38px;height:38px;border-radius:10px;background:#FFF1F0;display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+.obox .t{font-weight:700;font-size:14px}
+.obox .s{color:var(--ink3);font-size:12.5px}
+.obox a{margin-left:auto;flex:none;text-decoration:none;background:var(--ink);color:#fff;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.obox.on{background:#11212F;border-color:#11212F;color:#fff}
+.obox.on .ic{background:rgba(255,255,255,.1)}
+.obox.on .s{color:#A3A6AD}
+.obox.on a{background:#fff;color:var(--ink)}
+.top p a{color:var(--ink2)}
+
+/* 번호 표시 */
+.mk{display:none}
+body.marks .mk{display:inline-flex;position:absolute;z-index:3;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:800;align-items:center;justify-content:center;box-shadow:0 0 0 2px #fff;pointer-events:none}
+.rel{position:relative}
+
+/* 메모 */
+.notes h2{margin:0 0 4px;font-size:17px}
+.notes .lead{margin:0 0 14px;color:var(--ink2)}
+.note{display:grid;grid-template-columns:24px 1fr;gap:10px;padding:12px 0;border-top:1px solid #DCDFE4}
+.note .n{width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.note h4{margin:0 0 3px;font-size:14px}
+.note p{margin:0;color:var(--ink2);font-size:13px}
+.note .src{display:block;margin-top:3px;color:var(--ink3);font-size:12px}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px;background:#fff;border-radius:10px;overflow:hidden}
+.tbl th,.tbl td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:center}
+.tbl th{background:#22252A;color:#fff;font-weight:600}
+.tbl td:first-child{text-align:left;font-weight:600}
+.tbl .cl{display:inline-flex;align-items:center;gap:5px}
+.tbl .sw{width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.1)}
+.box{background:#fff;border:1px solid #DCDFE4;border-radius:12px;padding:14px 16px;margin-top:16px}
+.box h3{margin:0 0 8px;font-size:14.5px}
+.box ul{margin:0;padding-left:18px;color:var(--ink2);font-size:13px}
+.box li{margin:3px 0}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .phone{width:100%;max-width:410px;margin:0 auto;height:760px}
+}
+@media (max-width:440px){
+  .phone{border-width:6px;border-radius:30px}
+}
+</style>
+<style>.top>div:first-child{display:none}.top{justify-content:flex-end}.wrap{padding-top:8px}</style></head>
+<body class="marks">
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>골프장 빛 지도 · 소비자 화면 시안</h1>
+      <p>WTD 자사몰 모바일 기준. 화면을 직접 눌러 보며 고객 동선을 확인하는 시뮬레이션. <a id="toOwnerTop" href="#">오너 카드 발급 시안 ›</a></p>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div class="switch" role="tablist">
+        <button class="on" data-tab="map">1. 골프장 빛 지도</button>
+        <button data-tab="quiz">2. 3문항 렌즈 추천</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="mkToggle" checked> 설명 번호</label>
+    </div>
+  </div>
+  <div class="banner">시안 · 가정 데이터: 골프장 10곳은 가상 이름이고 코스 유형 분류도 예시. 렌즈 이름은 완성 렌즈 실측 표의 미러 색 이름을 그대로 씀(상품 색 이름과 대응 확인 전). 일출 · 일몰은 위도 · 경도로 계산한 값. 오너 카드 시안과는 주소 뒤 값으로만 연결(저장 없음)</div>
+
+  <div class="layout">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen" id="screen">
+
+        <!-- ① 빛 지도: 찾기 -->
+        <section class="view on" id="v-list">
+          <div class="appbar"><span class="logo">WTD<b>.</b></span><span class="crumb">골프 · 골프장 빛 지도</span></div>
+          <div class="hero">
+            <div class="sun"></div>
+            <h2>골프장 빛 지도</h2>
+            <p>자주 가는 골프장을 찾으면<br>그곳 빛과 시간대에 맞는 렌즈를 추천해 드려요</p>
+            <div class="search rel"><span class="mk" style="right:-6px;top:-8px">1</span>
+              <span aria-hidden="true">🔍</span><input id="q" placeholder="골프장 이름이나 지역 검색" autocomplete="off">
+            </div>
+          </div>
+          <div class="sec" style="padding-bottom:6px">
+            <p class="lbl">지역</p>
+            <div class="chips" id="regionChips"></div>
+          </div>
+          <div class="sec" style="padding-top:10px">
+            <p class="lbl" id="listLbl">1차 등록 골프장</p>
+            <div class="list" id="courseList"></div>
+            <div class="card soft rel" style="margin-top:16px"><span class="mk" style="right:8px;top:8px">2</span>
+              <p class="lbl" style="margin-bottom:6px">골프장을 못 찾으면 코스 유형으로</p>
+              <div class="chips" id="typeChips"></div>
+            </div>
+            <p class="fine" style="margin-top:14px">골프장 이름은 위치 안내를 위한 사실 정보이며 해당 골프장과의 제휴 · 광고가 아닙니다.</p>
+          </div>
+        </section>
+
+        <!-- ① 빛 지도: 골프장 상세 -->
+        <section class="view" id="v-detail">
+          <div class="appbar"><button class="back" id="backBtn" aria-label="뒤로">‹</button><span class="crumb" id="dCrumb">골프장 빛 지도</span></div>
+          <div class="sec dhead rel"><span class="mk" style="right:18px;top:16px">2</span>
+            <div id="dBadges"></div>
+            <h2 id="dName"></h2>
+            <div class="sub" id="dSub"></div>
+            <p class="desc" id="dDesc"></p>
+          </div>
+          <div class="sec" style="padding-top:0">
+            <div class="card rel"><span class="mk" style="right:8px;top:-8px">4</span>
+              <div class="dayhead">
+                <strong id="dayTitle">오늘의 빛</strong>
+                <input type="date" id="dDate" aria-label="라운드 날짜">
+              </div>
+              <div class="bar" id="dayBar"></div>
+              <div class="ticks"><span id="tRise"></span><span id="tNoon"></span><span id="tSet"></span></div>
+              <div class="slots" id="slotBtns"></div>
+            </div>
+          </div>
+          <div class="sec rec rel" style="padding-top:0"><span class="mk" style="right:18px;top:-6px">5</span>
+            <p class="lbl" id="recLbl">추천 렌즈</p>
+            <h3 id="recTitle"></h3>
+            <p class="why" id="recWhy"></p>
+            <div class="scale"><div class="pin" id="pin"></div></div>
+            <div class="scale-l"><span>밝은</span><span>중간</span><span>어두운</span></div>
+            <div class="tip" id="tip"></div>
+            <div class="prods rel" id="prods"><span class="mk" style="right:-6px;top:-8px">6</span></div>
+          </div>
+          <div class="sec" style="padding-top:0">
+            <div class="card obox rel" id="ownerBox"><span class="mk" style="right:8px;top:-8px">8</span></div>
+            <div class="card soft">
+              <p class="lbl" style="margin-bottom:4px">이 골프장 정보</p>
+              <div class="fine" id="dVerify"></div>
+            </div>
+            <div class="share">
+              <button id="toQuiz">3문항으로 다시 고르기</button>
+              <button class="pri">이 골프장 공유</button>
+            </div>
+            <p class="fine rel" style="margin-top:14px"><span class="mk" style="right:-14px;top:-12px">7</span>
+              참고용 추천이며 날씨 · 개인 시력에 따라 다를 수 있어요. 해를 정면으로 보는 눈부심은 렌즈만으로 없앨 수 없으니 모자 챙과 함께 써 주세요.<br>
+              <a href="#" onclick="return false">정보가 다르면 알려 주세요 ›</a>
+            </p>
+          </div>
+        </section>
+
+        <!-- ② 3문항 추천 -->
+        <section class="view" id="v-quiz">
+          <div class="appbar"><span class="logo">WTD<b>.</b></span><span class="crumb">나에게 맞는 렌즈 찾기</span></div>
+          <div class="sec" id="quizBody"></div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- 기획 메모 -->
+    <div class="notes">
+      <div id="notesMap">
+        <h2>1. 골프장 빛 지도: 화면 구성 메모</h2>
+        <p class="lead">고객 동선 = 골프장 검색 → 코스 유형 확인 → 라운드 시간대 선택 → 추천 렌즈 → 상품</p>
+        <div class="note"><span class="n">1</span><div><h4>골프장 이름으로 찾는 입구</h4><p>검색창이 첫 화면 한가운데. 「○○CC 선글라스」처럼 골프장 이름으로 검색하는 고객과 AI 검색 인용을 받는 입구(GEO)</p><span class="src">근거: 시그니처 마케팅 C-4 · 공식몰 GEO 진단</span></div></div>
+        <div class="note"><span class="n">2</span><div><h4>코스 유형 3가지 + 한 줄 설명</h4><p>숲 · 산악 / 내륙 평지 / 해안 · 개활. 유형마다 기본 렌즈 밝기가 정해지고, 골프장을 못 찾은 고객도 유형으로 바로 들어옴</p><span class="src">근거: C-2-4 추천 방식(10/28 사용자 지시)</span></div></div>
+        <div class="note"><span class="n">3</span><div><h4>확인 표시</h4><p>「캐디 리포터 확인」 · 「현장 확인 전」 배지로 정보 수준을 숨기지 않음. 정확도 위험 대응이자 캐디 시즌 리포트와 이어지는 고리</p><span class="src">근거: C-5 위험 · C-3 현장 검증</span></div></div>
+        <div class="note"><span class="n">4</span><div><h4>오늘의 빛 막대</h4><p>골프장 위도 · 경도로 그날 일출 · 일몰을 계산하고 하루를 5구간으로 색칠. 날짜를 바꾸면 계절에 따라 구간이 늘고 줄어듦. 구간을 누르면 아래 추천이 바뀜</p><span class="src">구간 경계(일출 후 90분 · 11시 · 15시 · 일몰 전 90분)는 시안에서 정한 값</span></div></div>
+        <div class="note"><span class="n">5</span><div><h4>추천 렌즈 = 밝기 3단</h4><p>고객에게는 투과율 숫자 대신 밝기 막대만 보여 줌. 「추천합니다」까지만 쓰고 「잘 보인다」 같은 효과 단정은 쓰지 않음</p><span class="src">밝기 3단 = 완성 렌즈 실측(초기 44.6~81.6%). 측정 조건 · 주체가 표에 없어 숫자 공개는 보류</span></div></div>
+        <div class="note"><span class="n">6</span><div><h4>상품 연결</h4><p>추천 1개 + 대안 1개. 「상품 보기」 경유 구매 수가 빛 지도 성과 지표</p><span class="src">근거: 판정 지표 C(추천 경유 구매)</span></div></div>
+        <div class="note"><span class="n">7</span><div><h4>참고용 · 오류 신고 · 모자 챙</h4><p>역광 정면 눈부심은 렌즈로 못 없앤다는 점을 먼저 말해 과장 위험을 줄임. 오류 신고 칸은 투그린 · 코스 개보수 반영 창구</p><span class="src">근거: C-2-5 · C-5</span></div></div>
+        <div class="note"><span class="n">8</span><div><h4>오너 카드와 연결</h4><p>처음 온 고객에게는 「이 골프장 라운드 알림 받기」 → 정품 등록 화면(골프장 미리 채움). 오너 카드에서 「내 골프장 빛 지도」로 들어온 고객에게는 「알림 받는 중」과 내 오너 카드 바로가기</p><span class="src">근거: 10/29 등록 혜택 결정(내 골프장 라운드 알림). 연결 방식은 시안</span></div></div>
+      </div>
+
+      <div id="notesQuiz" style="display:none">
+        <h2>2. 3문항 렌즈 추천: 화면 구성 메모</h2>
+        <p class="lead">기존 3문항(종목 · 날씨 · 안경)을 골프 전용으로 바꾼 안: 골프장 → 시간대 → 안경</p>
+        <div class="note"><span class="n">1</span><div><h4>첫 문항이 골프장</h4><p>골프장 이름을 고르면 코스 유형이 자동으로 정해짐. 모르면 유형 3개 또는 「여러 곳을 다녀요」(중간 기준)로 넘어감</p><span class="src">근거: C-4 「3문항 추천에 자주 가는 골프장 문항 추가」. 문항 구성은 시안 제안</span></div></div>
+        <div class="note"><span class="n">2</span><div><h4>시간대 5개 → 추천 3구간</h4><p>새벽 · 해 질 녘 · 야간 = 한 단 밝게, 오전 · 늦은 오후 = 역광 잦음, 한낮 = 한 단 어둡게</p><span class="src">근거: C-2-4 코스 유형 × 시간대 표</span></div></div>
+        <div class="note"><span class="n">3</span><div><h4>안경 문항</h4><p>안경을 쓰면 결과에 도수 클립을 함께 보여 줌. 도수 고객을 놓치지 않는 장치</p><span class="src">근거: 총정리 ④-12 · CADDY+ 구매에 도수클립 11개(26년)</span></div></div>
+        <div class="note"><span class="n">4</span><div><h4>결과 = 답을 그대로 이유로</h4><p>「○○CC는 숲 · 산악 코스라서」처럼 고객이 고른 답을 근거 문장으로 되돌려 줌. 추천 1 + 대안 1</p></div></div>
+        <div class="note"><span class="n">5</span><div><h4>빛 지도로 이어짐</h4><p>결과에서 그 골프장 상세(오늘의 빛 막대)로 넘어감. 두 화면이 서로 입구가 됨</p></div></div>
+      </div>
+
+      <div class="box">
+        <h3>추천 규칙 (시안에 넣은 표)</h3>
+        <table class="tbl">
+          <thead><tr><th>코스 유형</th><th>새벽 · 해 질 녘</th><th>오전 · 늦은 오후</th><th>한낮</th></tr></thead>
+          <tbody id="ruleBody"></tbody>
+        </table>
+        <p class="fine" style="margin:8px 0 0">밝은 = 마젠타 80.3 · 클리어 81.6, 중간 = 라벤더 73.3 · 트와일라잇 블루 71.5 · 아메시스트 그로우 67.4, 어두운 = 샴페인 44.6 · 사쿠라 핑크 61.1 (완성 렌즈 초기 투과율 %, 10/29 사용자 제공 실측). 사쿠라 핑크는 10/28 필름 단독 기준의 밝은 → 어두운으로 이동. 코스 유형 · 시간대 매칭은 전략기획팀 제안</p>
+      </div>
+
+      <div class="box">
+        <h3>공개 전에 확인할 것</h3>
+        <ul>
+          <li>미러 색 7종 ↔ 상품 렌즈 색 이름 대응 (공식몰은 스모크 · 바이올렛 · 피치 · 블루)</li>
+          <li>완성 렌즈 측정 조건 · 밝아지는 시간(그늘 진입), 라벤더 필름 단독값 14%p 불일치 (TOGK)</li>
+          <li>1차 30곳 코스 유형 분류 · 캐디 리포터 현장 확인</li>
+          <li>골프장 이름 사용 범위 (법무 또는 외부 확인)</li>
+          <li>「오늘의 빛」 구간 경계 시각 · 야간 라운드 문구</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- 데이터 (시안용 가정) ----------
+// 완성 렌즈(필름온 합지) 실측 기준 밝기 3단 (위키 C-2-7, 10/29). 초기 투과율 %는 메모용
+const FILMS={
+  magenta:{name:'마젠타',lv:'bright',vlt:80.3,mirror:true,bg:'linear-gradient(135deg,#FAD0EA 0%,#E77BC0 55%,#B95BB0 100%)'},
+  clear:{name:'클리어',lv:'bright',vlt:81.6,mirror:false,bg:'linear-gradient(135deg,#F4F5F6 0%,#D9DCE0 55%,#BFC3C9 100%)'},
+  lav:{name:'라벤더',lv:'mid',vlt:73.3,mirror:true,bg:'linear-gradient(135deg,#E3DAF7 0%,#B8A5E3 55%,#9C8BD0 100%)'},
+  twblue:{name:'트와일라잇 블루',lv:'mid',vlt:71.5,mirror:true,bg:'linear-gradient(135deg,#D6E3FA 0%,#86A6E3 55%,#5C76C2 100%)'},
+  amethyst:{name:'아메시스트 그로우',lv:'mid',vlt:67.4,mirror:true,bg:'linear-gradient(135deg,#E7D4F4 0%,#A97BD6 55%,#7C52B4 100%)'},
+  champ:{name:'샴페인',lv:'dark',vlt:44.6,mirror:true,bg:'linear-gradient(135deg,#E9D6AE 0%,#BF9F62 55%,#8E7442 100%)'},
+  pink:{name:'사쿠라 핑크',lv:'dark',vlt:61.1,mirror:true,bg:'linear-gradient(135deg,#F7C2D2 0%,#DA7F9E 55%,#A9617E 100%)'}
+};
+const LV={
+  bright:{label:'밝은 렌즈',films:['magenta','clear'],pos:14,color:'#F6CFDA',text:'그늘 · 약한 빛에서 너무 어둡지 않게'},
+  mid:{label:'중간 렌즈',films:['lav','twblue','amethyst'],pos:50,color:'#D3D7DE',text:'맑은 날 일반 라운드 기준'},
+  dark:{label:'어두운 렌즈',films:['champ','pink'],pos:86,color:'#5B6069',text:'빛이 강하고 가릴 것이 적을 때'}
+};
+const TYPES={
+  forest:{label:'숲 · 산악',cls:'b-forest',desc:'홀마다 숲 그늘과 햇빛이 번갈아 드는 코스예요. 그늘에 들어가도 너무 어둡지 않도록 밝은 렌즈부터 권해요.',short:'그늘과 햇빛이 자주 바뀌는',base:'bright',rec:{edge:'bright',low:'bright',noon:'mid'}},
+  inland:{label:'내륙 평지',cls:'b-inland',desc:'그늘과 햇빛이 고르게 섞인 코스예요. 중간 밝기를 기본으로, 시간대에 따라 한 단씩 조정해요.',short:'그늘과 햇빛이 고르게 섞인',base:'mid',rec:{edge:'bright',low:'mid',noon:'dark'}},
+  coast:{label:'해안 · 개활',cls:'b-coast',desc:'가릴 것이 적어 하루 내내 빛이 강한 편이고 바다 · 물 반사도 많아요. 어두운 렌즈부터 권해요.',short:'가릴 것이 적고 반사가 많은',base:'dark',rec:{edge:'mid',low:'dark',noon:'dark'}}
+};
+const SLOTS={
+  edge:{label:'새벽 · 해 질 녘',hint:'한 단 밝게',tip:'해가 뜨고 질 무렵엔 빛이 약해요. 한 단 밝은 렌즈를 권해요.'},
+  low:{label:'오전 · 늦은 오후',hint:'역광 잦음',tip:'해가 낮아 티샷 때 해를 마주 보는 홀이 많아요. 이 시간엔 자외선이 약해 조광 렌즈가 덜 어두워질 수 있어요.'},
+  noon:{label:'한낮',hint:'한 단 어둡게',tip:'해가 높고 빛이 가장 강한 시간이에요. 한 단 어두운 렌즈를 권해요.'}
+};
+// 가상 골프장 (이름 · 분류 모두 예시)
+const COURSES=[
+  {id:'c1',name:'단풍재CC',region:'강원',area:'강원 홍천',type:'forest',lat:37.70,lon:127.89,ok:true,holes:27},
+  {id:'c2',name:'솔향기CC',region:'수도권',area:'경기 가평',type:'forest',lat:37.83,lon:127.51,ok:true,holes:18},
+  {id:'c3',name:'운무산CC',region:'충청',area:'충북 제천',type:'forest',lat:37.13,lon:128.19,ok:false,holes:18},
+  {id:'c4',name:'한내들CC',region:'수도권',area:'경기 여주',type:'inland',lat:37.30,lon:127.63,ok:true,holes:27},
+  {id:'c5',name:'미호천CC',region:'충청',area:'충북 청주',type:'inland',lat:36.64,lon:127.43,ok:false,holes:18},
+  {id:'c6',name:'금강들CC',region:'충청',area:'충남 부여',type:'inland',lat:36.27,lon:126.91,ok:false,holes:18},
+  {id:'c7',name:'갯바람CC',region:'수도권',area:'인천 영종도',type:'coast',lat:37.48,lon:126.45,ok:true,holes:18},
+  {id:'c8',name:'수평선CC',region:'영남',area:'경북 포항',type:'coast',lat:36.02,lon:129.37,ok:false,holes:18},
+  {id:'c9',name:'물마루CC',region:'호남',area:'전남 여수',type:'coast',lat:34.76,lon:127.66,ok:false,holes:18},
+  {id:'c10',name:'돌담오름CC',region:'제주',area:'제주 서귀포',type:'coast',lat:33.30,lon:126.40,ok:true,holes:27}
+];
+const REGIONS=['전체','수도권','충청','강원','영남','호남','제주'];
+
+// ---------- 일출 · 일몰 계산 (sunrise equation) ----------
+function sunTimes(y,m,d,lat,lon){
+  const r=Math.PI/180;
+  const J=Date.UTC(y,m,d,12)/864e5+2440587.5;
+  const n=Math.round(J-2451545+0.0008);
+  const Js=n-lon/360;
+  const M=((357.5291+0.98560028*Js)%360+360)%360;
+  const C=1.9148*Math.sin(M*r)+0.02*Math.sin(2*M*r)+0.0003*Math.sin(3*M*r);
+  const L=(M+C+180+102.9372)%360;
+  const Jt=2451545+Js+0.0053*Math.sin(M*r)-0.0069*Math.sin(2*L*r);
+  const sd=Math.sin(L*r)*Math.sin(23.4397*r), cd=Math.cos(Math.asin(sd));
+  const w=Math.acos((Math.sin(-0.833*r)-Math.sin(lat*r)*sd)/(Math.cos(lat*r)*cd))/r;
+  const kst=j=>((((j-2440587.5)*1440+540)%1440)+1440)%1440; // KST 분
+  return {rise:kst(Jt-w/360),set:kst(Jt+w/360),noon:kst(Jt)};
+}
+const hm=m=>{m=Math.round(m);return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+
+// ---------- 상태 ----------
+const S={region:'전체',course:null,slot:'low',date:null};
+const $=id=>document.getElementById(id);
+const screen=$('screen');
+function show(v){document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id===v));screen.scrollTop=0}
+
+// ---------- ① 목록 ----------
+function renderChips(){
+  $('regionChips').innerHTML=REGIONS.map(r=>`<button class="chip ${S.region===r?'on':''}" data-r="${r}">${r}</button>`).join('');
+  $('typeChips').innerHTML=Object.entries(TYPES).map(([k,t])=>`<button class="chip" data-t="${k}"><span class="badge ${t.cls}" style="padding:0 4px">${t.label}</span></button>`).join('');
+}
+function renderList(){
+  const q=$('q').value.trim();
+  const items=COURSES.filter(c=>(S.region==='전체'||c.region===S.region)&&(!q||(c.name+c.area).includes(q)));
+  $('listLbl').textContent=q?`검색 결과 ${items.length}곳`:(S.region==='전체'?'1차 등록 골프장':S.region+' 골프장');
+  $('courseList').innerHTML=items.length?items.map((c,i)=>{
+    const t=TYPES[c.type];
+    return `<button class="row rel" data-c="${c.id}">${i===0?'<span class="mk" style="right:22px;top:4px">3</span>':''}
+      <span class="dot" style="background:${LV[t.rec.low].color}"></span>
+      <span><span class="nm">${c.name}</span><br><span class="sub">${c.area} · ${c.holes}홀 · <span class="badge ${t.cls}">${t.label}</span>${c.ok?' <span class="badge b-ok">캐디 리포터 확인</span>':''}</span></span>
+      <span class="go">›</span></button>`}).join('')
+    :`<div class="empty">찾는 골프장이 아직 없어요. 아래 코스 유형으로 골라 보시거나 <a href="#" onclick="return false">등록 요청</a>을 남겨 주세요.</div>`;
+}
+
+// ---------- ① 상세 ----------
+function openCourse(id,slot){
+  S.course=COURSES.find(c=>c.id===id);
+  if(slot)S.slot=slot;
+  renderDetail();show('v-detail');
+}
+function openType(k){
+  // 골프장 없이 유형만: 대표 좌표(서울 근처)로 계산
+  S.course={id:'type-'+k,name:TYPES[k].label+' 코스',area:'코스 유형으로 보기',type:k,lat:37.3,lon:127.4,ok:null,holes:null,isType:true};
+  renderDetail();show('v-detail');
+}
+function renderDetail(){
+  const c=S.course,t=TYPES[c.type];
+  $('dCrumb').textContent=c.isType?'코스 유형':c.area;
+  $('dBadges').innerHTML=`<span class="badge ${t.cls}">${t.label}</span> `+(c.ok===true?'<span class="badge b-ok">캐디 리포터 확인</span>':c.ok===false?'<span class="badge b-wait">현장 확인 전</span>':'');
+  $('dName').textContent=c.name;
+  $('dSub').textContent=c.isType?'골프장 대신 코스 유형 기준 추천':`${c.area} · ${c.holes}홀`;
+  $('dDesc').textContent=t.desc;
+  $('dVerify').innerHTML=c.isType?'코스 유형 기준 일반 추천이에요. 골프장을 검색하면 그날 일출 · 일몰에 맞춘 구간을 볼 수 있어요.'
+    :(c.ok?'CADDY+ 리포터가 이 골프장 코스 특성을 확인했어요. 확인일 2027-02 (예시)':'아직 현장 확인 전이에요. 코스 안내 · 위성 사진으로 분류했어요.')+'<br>코스 개보수 · 투그린 운영은 정보가 달라질 수 있어요.';
+  renderDay();renderRec();renderOwner();
+}
+// ---------- 오너 카드 연결 ----------
+const OWNER_PAGE='261029_%5B전략기획%5DWTD오너카드_발급시안_v02.html';
+const OW=new URLSearchParams(window.__Q||location.search);
+function renderOwner(){
+  const c=S.course,box=$('ownerBox'),mk='<span class="mk" style="right:8px;top:-8px">8</span>';
+  if(c.isType){box.style.display='none';return}
+  box.style.display='';
+  const mine=OW.get('owner')&&OW.get('course')===c.id;
+  box.classList.toggle('on',!!mine);
+  box.innerHTML=mk+(mine
+    ?`<span class="ic">⛳</span><span><span class="t">내 골프장 · 알림 받는 중</span><br><span class="s">봄 · 가을 시즌 전에 이 골프장 추천 렌즈를 보내 드려요</span></span><a href="${OWNER_PAGE}?view=card&golf=${c.id}">내 오너 카드</a>`
+    :`<span class="ic">🔔</span><span><span class="t">이 골프장 라운드 알림 받기</span><br><span class="s">WTD 정품 등록 고객에게 시즌 전 추천 렌즈 · 일출 시각을 보내요</span></span><a href="${OWNER_PAGE}?golf=${c.id}">등록하고 받기</a>`);
+}
+function renderDay(){
+  const c=S.course,t=TYPES[c.type];
+  const [y,m,d]=S.date.split('-').map(Number);
+  const s=sunTimes(y,m-1,d,c.lat,c.lon);
+  const b=[s.rise,s.rise+90,Math.max(s.rise+90,660),Math.min(s.set-90,900),s.set-90,s.set];
+  for(let i=1;i<b.length;i++)b[i]=Math.max(b[i],b[i-1]);
+  const segs=[['새벽','edge'],['오전','low'],['한낮','noon'],['오후','low'],['해 질 녘','edge']];
+  const span=s.set-s.rise;
+  let html=segs.map(([lab,sl],i)=>{
+    const w=(b[i+1]-b[i])/span*100,lv=t.rec[sl];
+    return `<button class="seg lv-${lv} ${S.slot===sl?'sel':''}" data-slot="${sl}" title="${lab} ${hm(b[i])}~${hm(b[i+1])}" style="width:${w}%;background:${LV[lv].color}">${w>9?lab:''}</button>`}).join('');
+  const now=new Date(),todayK=new Date(now.getTime()+(540+now.getTimezoneOffset())*6e4);
+  const todayStr=todayK.getFullYear()+'-'+String(todayK.getMonth()+1).padStart(2,'0')+'-'+String(todayK.getDate()).padStart(2,'0');
+  const nm=todayK.getHours()*60+todayK.getMinutes();
+  if(S.date===todayStr&&nm>s.rise&&nm<s.set)html+=`<span class="now" style="left:${(nm-s.rise)/span*100}%"></span>`;
+  $('dayBar').innerHTML=html;
+  $('dayTitle').textContent=S.date===todayStr?'오늘의 빛':`${m}월 ${d}일의 빛`;
+  $('tRise').textContent='일출 '+hm(s.rise);$('tNoon').textContent='해가 가장 높은 때 '+hm(s.noon);$('tSet').textContent='일몰 '+hm(s.set);
+  $('slotBtns').innerHTML=Object.entries(SLOTS).map(([k,v])=>`<button class="slot ${S.slot===k?'on':''}" data-slot="${k}">${v.label}<small>${v.hint}</small></button>`).join('');
+}
+function renderRec(){
+  const t=TYPES[S.course.type],lv=t.rec[S.slot],L=LV[lv];
+  $('recLbl').textContent=`${SLOTS[S.slot].label} 라운드 추천`;
+  $('recTitle').textContent=L.label;
+  const ord={bright:0,mid:1,dark:2},dv=ord[lv]-ord[t.base];
+  $('recWhy').textContent=`${t.label} 코스는 ${LV[t.base].label}가 기본이에요. `+(dv===0?'이 시간대도 그대로 권해요.':dv<0?'이 시간대는 한 단 밝게 권해요.':'이 시간대는 한 단 어둡게 권해요.');
+  $('pin').style.left=L.pos+'%';
+  $('tip').innerHTML=`<span>☀️</span><span>${SLOTS[S.slot].tip}</span>`;
+  $('prods').innerHTML=`<span class="mk" style="right:-6px;top:-8px">6</span>`+prodCards(L);
+}
+function prodCards(L){return L.films.map((f,i)=>prodCard(f,i?'같은 밝기 다른 색':'추천',i>0)).join('')}
+function prodCard(f,tag,alt){
+  const F=FILMS[f];
+  return `<div class="prod ${alt?'alt':''}"><span class="lens" style="background:${F.bg}"></span><span><span class="t">PENTA2 · ${F.name}</span><br><span class="s">${tag} · ${LV[F.lv].label} · ${F.mirror?'조광 + 미러':'조광 · 미러 없음'}</span></span><button class="cta">상품 보기</button></div>`;
+}
+
+// ---------- ② 3문항 ----------
+const Q={step:0,course:null,type:null,time:null,glasses:null,q:''};
+const TIMES=[
+  {k:'dawn',ic:'🌅',t:'새벽 · 이른 아침',s:'첫 티오프, 해 뜰 무렵',slot:'edge'},
+  {k:'am',ic:'🌤️',t:'오전',s:'8시 ~ 11시쯤',slot:'low'},
+  {k:'noon',ic:'☀️',t:'한낮',s:'11시 ~ 15시쯤',slot:'noon'},
+  {k:'pm',ic:'🌇',t:'늦은 오후',s:'15시 ~ 해 지기 전',slot:'low'},
+  {k:'night',ic:'🌙',t:'해 질 녘 · 야간',s:'해 질 무렵, 조명 라운드',slot:'edge'}
+];
+const GLS=[
+  {k:'no',ic:'👀',t:'안 써요',s:'맨눈 · 시력 교정 안 함'},
+  {k:'yes',ic:'👓',t:'안경을 써요',s:'도수 안경'},
+  {k:'lens',ic:'💧',t:'콘택트렌즈를 껴요',s:''}
+];
+function renderQuiz(){
+  const body=$('quizBody');
+  const prog=`<div class="prog">${[0,1,2].map(i=>`<i class="${i<=Q.step?'on':''}"></i>`).join('')}</div>`;
+  if(Q.step===0){
+    const hits=Q.q?COURSES.filter(c=>(c.name+c.area).includes(Q.q)).slice(0,4):[];
+    body.innerHTML=prog+`<div class="qn">질문 1 / 3</div><h3 class="qt rel">자주 가는 골프장은 어디인가요?<span class="mk" style="right:0;top:2px">1</span></h3><p class="qs">골프장마다 그늘 · 반사가 달라 추천 렌즈가 바뀌어요</p>
+      <div class="qsearch"><span>🔍</span><input id="qq" placeholder="골프장 이름 검색 (예: 솔향기)" value="${Q.q}" autocomplete="off"></div>
+      <div class="hits">${hits.map(c=>`<button class="hit ${Q.course===c.id?'on':''}" data-qc="${c.id}"><b>${c.name}</b><span class="fine">${c.area}</span><span class="badge ${TYPES[c.type].cls}" style="margin-left:auto">${TYPES[c.type].label}</span></button>`).join('')}
+      ${Q.q&&!hits.length?'<div class="fine">찾는 골프장이 없어요. 아래에서 코스 느낌으로 골라 주세요.</div>':''}</div>
+      <div class="or">이름을 모르면</div>
+      <div class="opts">${Object.entries(TYPES).map(([k,t])=>`<button class="opt ${!Q.course&&Q.type===k?'on':''}" data-qt="${k}"><span class="ic">${k==='forest'?'🌲':k==='inland'?'🌾':'🌊'}</span><span><span class="t">${t.label}</span><br><span class="s">${t.short} 코스</span></span></button>`).join('')}
+      <button class="opt ${!Q.course&&Q.type==='multi'?'on':''}" data-qt="multi"><span class="ic">🗺️</span><span><span class="t">여러 곳을 다녀요</span><br><span class="s">중간 기준으로 추천</span></span></button></div>
+      <div class="qnav"><button class="next" id="qNext" ${Q.course||Q.type?'':'disabled'}>다음</button></div>`;
+    const inp=$('qq');inp.oninput=e=>{Q.q=e.target.value.trim();const p=e.target.selectionStart;renderQuiz();const n=$('qq');n.focus();n.setSelectionRange(p,p)};
+  }else if(Q.step===1){
+    body.innerHTML=prog+`<div class="qn">질문 2 / 3</div><h3 class="qt rel">주로 언제 라운드하세요?<span class="mk" style="right:0;top:2px">2</span></h3><p class="qs">해 높이에 따라 같은 골프장도 빛이 달라요</p>
+      <div class="opts">${TIMES.map(o=>`<button class="opt ${Q.time===o.k?'on':''}" data-qtime="${o.k}"><span class="ic">${o.ic}</span><span><span class="t">${o.t}</span><br><span class="s">${o.s}</span></span></button>`).join('')}</div>
+      <div class="qnav"><button id="qPrev">이전</button><button class="next" id="qNext" ${Q.time?'':'disabled'}>다음</button></div>`;
+  }else if(Q.step===2){
+    body.innerHTML=prog+`<div class="qn">질문 3 / 3</div><h3 class="qt rel">평소 안경을 쓰세요?<span class="mk" style="right:0;top:2px">3</span></h3><p class="qs">안경을 쓰면 도수 클립을 함께 안내해 드려요</p>
+      <div class="opts">${GLS.map(o=>`<button class="opt ${Q.glasses===o.k?'on':''}" data-qg="${o.k}"><span class="ic">${o.ic}</span><span><span class="t">${o.t}</span>${o.s?`<br><span class="s">${o.s}</span>`:''}</span></button>`).join('')}</div>
+      <div class="qnav"><button id="qPrev">이전</button><button class="next" id="qNext" ${Q.glasses?'':'disabled'}>결과 보기</button></div>`;
+  }else{
+    const c=Q.course?COURSES.find(x=>x.id===Q.course):null;
+    const typeKey=c?c.type:(Q.type==='multi'?'inland':Q.type);
+    const T=TYPES[typeKey],tm=TIMES.find(x=>x.k===Q.time),lv=T.rec[tm.slot],L=LV[lv];
+    const main=L.films[0];
+    const r1=c?`<b>${c.name}</b>는 ${T.short} <b>${T.label}</b> 코스라서 기본은 ${LV[T.base].label}`:Q.type==='multi'?`<b>여러 골프장</b>을 다니셔서 가장 무난한 <b>중간 기준</b>에서 시작`:`<b>${T.label}</b> 코스는 ${T.short} 곳이라 기본은 ${LV[T.base].label}`;
+    const r2=`<b>${tm.t}</b> 라운드: ${tm.k==='night'?'해 질 무렵 · 조명 아래에선 빛이 약해요. 한 단 밝게 골랐어요. 야간엔 조광 렌즈가 밝은 상태라 그대로 쓰셔도 돼요':SLOTS[tm.slot].tip}`;
+    const r3=Q.glasses==='yes'?'<b>안경</b>을 쓰셔서 고글 안쪽에 끼우는 <b>도수 클립</b>을 함께 안내해 드려요':Q.glasses==='lens'?'<b>콘택트렌즈</b>를 끼면 고글을 그대로 쓰시면 돼요':null;
+    body.innerHTML=`<div class="qn rel" style="margin-bottom:6px">추천 결과<span class="mk" style="right:0;top:-2px">4</span></div>
+      <div class="res-hero" style="background:${L.color}${lv==='dark'?';color:#fff':''}">
+        <span class="lens" style="background:${FILMS[main].bg}"></span>
+        <div class="k">${tm.t} · ${c?c.name:T.label}</div><h3>${L.label}</h3><div>${FILMS[main].name} 추천</div></div>
+      <ul class="reasons">
+        <li><span class="n">1</span><span>${r1}</span></li>
+        <li><span class="n">2</span><span>${r2}</span></li>
+        ${r3?`<li><span class="n">3</span><span>${r3}</span></li>`:''}
+      </ul>
+      <div class="prods">${prodCards(L)}
+      ${Q.glasses==='yes'?`<div class="prod alt"><span class="lens" style="background:linear-gradient(135deg,#fff,#e6e8eb)"></span><span><span class="t">PENTA2 도수 클립</span><br><span class="s">안경 착용자용 · 안경원 도수 가공</span></span><button class="cta">상품 보기</button></div>`:''}</div>
+      <div class="card soft rel" style="margin-top:14px"><span class="mk" style="right:8px;top:-8px">5</span>
+        ${c?`<button class="link" id="toMap">${c.name} 빛 지도에서 시간대별로 보기 ›</button>`:`<button class="link" id="toMapType">${T.label} 코스 빛 지도 보기 ›</button>`}
+        <p class="fine" style="margin:6px 0 0">참고용 추천이에요. 해를 정면으로 보는 눈부심은 렌즈만으로 없앨 수 없으니 모자 챙과 함께 써 주세요.</p>
+      </div>
+      <div class="qnav"><button id="qRestart">처음부터 다시</button><button class="next" id="qShare">결과 공유</button></div>`;
+    const go=$('toMap');if(go)go.onclick=()=>{switchTab('map');openCourse(c.id,tm.slot)};
+    const gt=$('toMapType');if(gt)gt.onclick=()=>{switchTab('map');S.slot=tm.slot;openType(typeKey)};
+  }
+}
+
+// ---------- 이벤트 ----------
+document.addEventListener('click',e=>{
+  const el=e.target.closest('button');if(!el)return;
+  const d=el.dataset;
+  if(d.tab)return switchTab(d.tab);
+  if(d.r){S.region=d.r;renderChips();renderList();return}
+  if(d.t){openType(d.t);return}
+  if(d.c){openCourse(d.c);return}
+  if(d.slot){S.slot=d.slot;renderDay();renderRec();return}
+  if(d.qc){Q.course=d.qc;Q.type=null;renderQuiz();return}
+  if(d.qt){Q.type=d.qt;Q.course=null;renderQuiz();return}
+  if(d.qtime){Q.time=d.qtime;renderQuiz();return}
+  if(d.qg){Q.glasses=d.qg;renderQuiz();return}
+  if(el.id==='qNext'){Q.step++;renderQuiz();screen.scrollTop=0;return}
+  if(el.id==='qPrev'){Q.step--;renderQuiz();return}
+  if(el.id==='qRestart'){Object.assign(Q,{step:0,course:null,type:null,time:null,glasses:null,q:''});renderQuiz();return}
+  if(el.id==='backBtn'){show('v-list');return}
+  if(el.id==='toQuiz'){switchTab('quiz');return}
+});
+$('q').addEventListener('input',renderList);
+$('dDate').addEventListener('change',e=>{if(e.target.value){S.date=e.target.value;renderDay()}});
+$('mkToggle').addEventListener('change',e=>document.body.classList.toggle('marks',e.target.checked));
+function switchTab(tab){
+  document.querySelectorAll('.switch button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  $('notesMap').style.display=tab==='map'?'':'none';
+  $('notesQuiz').style.display=tab==='quiz'?'':'none';
+  if(tab==='map')show('v-list');
+  else{renderQuiz();show('v-quiz')}
+}
+
+// 추천 규칙 표
+$('ruleBody').innerHTML=Object.values(TYPES).map(t=>`<tr><td>${t.label}</td>${['edge','low','noon'].map(s=>{const L=LV[t.rec[s]];return `<td><span class="cl"><span class="sw" style="background:${L.color}"></span>${L.label.replace(' 렌즈','')}</span></td>`}).join('')}</tr>`).join('');
+
+// 시작
+(function(){
+  const n=new Date(),k=new Date(n.getTime()+(540+n.getTimezoneOffset())*6e4);
+  S.date=k.getFullYear()+'-'+String(k.getMonth()+1).padStart(2,'0')+'-'+String(k.getDate()).padStart(2,'0');
+  $('dDate').value=S.date;
+  renderChips();renderList();
+  $('toOwnerTop').href=OWNER_PAGE;
+  // 오너 카드에서 넘어온 경우: ?course=c2&slot=low&owner=000128
+  const cid=OW.get('course');
+  if(cid&&COURSES.some(c=>c.id===cid))openCourse(cid,SLOTS[OW.get('slot')]?OW.get('slot'):null);
+})();
+<\/script>
+</body>
+</html>
+</script>
+<script type="text/plain" id="src-owner"><!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WTD 오너 카드 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --red:#FF5250; --ink:#15171A; --ink2:#4A4F57; --ink3:#868C95; --line:#E4E6EA;
+  --bg:#F2F3F5; --card:#FFFFFF; --soft:#F7F8FA;
+  --navy:#11212F; --stone:#CCCDCD; --kakao:#FEE500;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,"Pretendard Variable","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select{font:inherit}
+
+/* 바깥 틀 */
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 48px}
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px}
+.top h1{margin:0;font-size:22px;letter-spacing:-.02em}
+.top p{margin:4px 0 0;color:var(--ink2)}
+.top p a{color:var(--ink2)}
+.banner{background:#FFF4E5;border:1px solid #F5D9A8;color:#7A5212;border-radius:8px;padding:8px 12px;font-size:12.5px;margin-bottom:16px}
+.switch{display:flex;gap:6px;background:#E6E8EC;padding:4px;border-radius:10px;flex-wrap:wrap}
+.switch button{border:0;background:transparent;padding:8px 12px;border-radius:7px;font-weight:600;color:var(--ink2)}
+.switch button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.toggle{display:flex;align-items:center;gap:6px;color:var(--ink2);font-size:13px;user-select:none}
+.layout{display:grid;grid-template-columns:410px 1fr;gap:28px;align-items:start}
+
+/* 휴대폰 */
+.phone{width:410px;height:820px;border:10px solid #121315;border-radius:46px;background:#fff;overflow:hidden;position:relative;box-shadow:0 20px 40px rgba(20,22,26,.18)}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:24px;background:#121315;border-radius:0 0 14px 14px;z-index:9}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+.view{display:none}.view.on{display:block}
+
+/* 앱 머리 */
+.appbar{position:sticky;top:0;z-index:4;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:30px 18px 10px;display:flex;align-items:center;gap:10px}
+.logo{font-weight:900;letter-spacing:.06em;font-size:18px}
+.logo b{color:var(--red)}
+.appbar .crumb{color:var(--ink3);font-size:12.5px}
+.appbar .back{border:0;background:none;padding:0 4px 0 0;font-size:20px;line-height:1}
+
+/* 공통 */
+.sec{padding:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.soft{background:var(--soft);border-color:transparent}
+.lbl{font-size:12px;color:var(--ink3);font-weight:600;margin:0 0 8px;letter-spacing:.02em}
+.fine{color:var(--ink3);font-size:12px;line-height:1.55}
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:6px;padding:2px 7px;font-size:11.5px;font-weight:700}
+.b-ed{background:#FFECEC;color:#C8302E}
+.b-forest{background:#E7F3EA;color:#2C6B3C}
+.b-inland{background:#F3EFE4;color:#7A6020}
+.b-coast{background:#E5F0F8;color:#245A82}
+.lens{width:52px;height:30px;border-radius:15px 15px 18px 18px/12px 12px 18px 18px;flex:none;position:relative;box-shadow:inset 0 -3px 6px rgba(0,0,0,.12)}
+.lens::after{content:"";position:absolute;left:8px;top:5px;width:18px;height:6px;border-radius:6px;background:rgba(255,255,255,.55);transform:rotate(-8deg)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:14px;font-weight:700;font-size:15px;text-decoration:none;color:var(--ink)}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.kakao{background:var(--kakao);border-color:var(--kakao);color:#191919}
+.btn:disabled{background:#C9CCD1;border-color:#C9CCD1;color:#fff;cursor:default}
+.rel{position:relative}
+
+/* ① QR 랜딩 */
+.hero{background:linear-gradient(160deg,#11212F 0%,#1C2C3A 60%,#2F333B 100%);color:#fff;padding:24px 18px 22px;position:relative;overflow:hidden}
+.hero .k{font-size:12px;letter-spacing:.14em;color:#A3A6AD;font-weight:700}
+.hero h2{margin:6px 0 6px;font-size:28px;letter-spacing:-.03em;line-height:1.2}
+.hero h2 b{color:var(--red)}
+.hero p{margin:0;color:#C9CDD3;font-size:13.5px}
+.hero .ring{position:absolute;right:-50px;top:-50px;width:170px;height:170px;border-radius:50%;border:1px solid rgba(204,205,205,.18);box-shadow:0 0 0 22px rgba(204,205,205,.04),0 0 0 44px rgba(204,205,205,.03)}
+.scanned{display:flex;align-items:center;gap:12px;margin-top:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:11px 12px}
+.scanned .t{font-weight:700;font-size:14.5px}
+.scanned .s{color:#A3A6AD;font-size:12px}
+.scanned .ok{margin-left:auto;color:#7DDCA0;font-size:12px;font-weight:700;white-space:nowrap}
+.from{display:flex;gap:8px;align-items:center;background:#FFF6F0;color:#7A3B1A;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:14px}
+.bene{display:grid;gap:8px;margin:0;padding:0}
+.bene li{list-style:none;display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+.bene .ic{width:34px;height:34px;border-radius:10px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.bene .t{font-weight:700}
+.bene .s{color:var(--ink3);font-size:12.5px}
+
+/* ② 등록 */
+.steps{display:flex;gap:4px;margin:2px 0 14px}
+.steps i{flex:1;height:4px;border-radius:2px;background:#E5E7EB}
+.steps i.on{background:var(--red)}
+.ft{margin:0 0 4px;font-size:21px;letter-spacing:-.02em;line-height:1.35}
+.fs{margin:0 0 16px;color:var(--ink3);font-size:13px}
+.field{margin-bottom:16px}
+.field>label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.field>label em{font-style:normal;color:var(--red);margin-left:2px}
+.field>label small{font-weight:500;color:var(--ink3);margin-left:4px}
+.inp{display:flex;gap:6px}
+.inp input,.field>input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14.5px;background:#fff;outline:none}
+.inp input:focus,.field>input:focus{border-color:var(--ink)}
+.inp button{flex:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:0 12px;font-size:13px;font-weight:700;white-space:nowrap}
+.linked{display:flex;align-items:center;gap:8px;background:#FFFBD6;border-radius:10px;padding:10px 12px;font-size:13px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:13px;color:var(--ink2)}
+.chip.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.help{margin-top:5px;color:var(--ink3);font-size:12px}
+.gsel{display:flex;align-items:center;gap:8px;border:1px solid var(--ink);border-radius:10px;padding:9px 12px;font-size:13.5px}
+.gsel .x{margin-left:auto;border:0;background:none;color:var(--ink3);font-size:12px}
+.ghits{display:grid;gap:6px;margin-top:6px}
+.ghit{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;text-align:left;display:flex;gap:8px;align-items:center;font-size:13px}
+.ghit .fine{margin-left:2px}
+.ghit .badge{margin-left:auto}
+.agree{border:1px solid var(--line);border-radius:12px;padding:4px 12px;margin-bottom:16px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:10px 0;font-size:13.5px;cursor:pointer}
+.chk+.chk{border-top:1px solid var(--line)}
+.chk input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--red);flex:none}
+.chk small{display:block;color:var(--ink3);font-size:12px}
+.chk .req{color:var(--red);font-weight:700}
+.chk .opt{color:var(--ink3);font-weight:700}
+
+/* ③ 오너 카드 */
+.issuing{position:absolute;inset:0;background:var(--navy);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:7}
+.issuing.on{display:flex}
+.issuing .spin{width:44px;height:44px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:var(--red);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.issuing p{margin:0;color:#C9CDD3}
+.done{text-align:center;padding:4px 0 14px}
+.done .k{color:var(--red);font-weight:800;font-size:12.5px;letter-spacing:.04em}
+.done h2{margin:4px 0 2px;font-size:22px;letter-spacing:-.02em}
+.done p{margin:0;color:var(--ink3);font-size:13px}
+.owner{position:relative;aspect-ratio:1.586;border-radius:18px;overflow:hidden;color:#FBF9F9;
+  background:radial-gradient(120% 90% at 100% 0%,rgba(204,205,205,.20),transparent 55%),linear-gradient(140deg,#1E2E3C 0%,#101C27 48%,#0A131B 100%);
+  box-shadow:0 24px 40px -18px rgba(0,0,0,.55),inset 0 0 0 1px rgba(204,205,205,.22);animation:rise .9s cubic-bezier(.16,1,.3,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(26px) scale(.96)}to{opacity:1;transform:none}}
+.owner .lines{position:absolute;inset:0;opacity:.14;background:repeating-radial-gradient(ellipse 150% 62% at 50% 135%,transparent 0 10px,rgba(204,205,205,.6) 10px 11px);-webkit-mask:linear-gradient(115deg,#000 0%,transparent 45%);mask:linear-gradient(115deg,#000 0%,transparent 45%)}
+.owner .frame{position:absolute;inset:10px;border:1px solid rgba(204,205,205,.2);border-radius:11px}
+.oc{position:absolute;inset:0;padding:18px 20px;display:grid;grid-template-rows:auto 1fr auto}
+.oc-top{display:flex;justify-content:space-between;align-items:flex-start}
+.oc-top .brand{font-weight:900;letter-spacing:.3em;font-size:15px}
+.oc-top .brand b{color:var(--red)}
+.oc-top .brand small{display:block;font-weight:600;letter-spacing:.18em;color:var(--stone);font-size:9px;margin-top:4px}
+.oc-top .lens{width:56px;height:32px}
+.oc-mid{align-self:center}
+.oc-mid .model{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.oc-mid .no{font-size:30px;font-weight:300;letter-spacing:.04em;font-variant-numeric:tabular-nums;line-height:1.15}
+.oc-mid .no b{font-weight:700}
+.oc-bot{display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;gap:8px;font-size:10.5px;color:var(--stone)}
+.oc-bot b{display:block;color:#fff;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.toast{display:flex;gap:8px;align-items:center;background:#F0FAF3;color:#25683D;border-radius:10px;padding:10px 12px;font-size:13px;margin-top:12px}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.act{border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12.5px;font-weight:700;line-height:1.3;text-align:center;text-decoration:none;color:var(--ink)}
+.act .ic{font-size:19px}
+.act.hl{border-color:var(--red);color:#C8302E;background:#FFF7F7}
+.next{margin-top:14px}
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.tl li{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+.tl li:first-child{border-top:0}
+.tl .d{color:var(--ink3);font-variant-numeric:tabular-nums;font-size:12.5px}
+.tl .off{color:var(--ink3)}
+.tl .b{border:0;background:none;color:var(--red);font-weight:700;padding:0;font-size:12.5px}
+
+/* 시트 */
+.dim{position:absolute;inset:0;background:rgba(10,12,15,.45);display:none;z-index:8}
+.dim.on{display:block}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:10px 18px 22px;max-height:84%;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);z-index:9}
+.sheet.on{transform:none}
+.sheet .grab{width:40px;height:4px;border-radius:2px;background:#D5D8DD;margin:0 auto 12px}
+.sheet h3{margin:0 0 4px;font-size:18px;letter-spacing:-.01em}
+.sheet .sub{margin:0 0 12px;color:var(--ink3);font-size:13px}
+.kv{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+.kv th{width:84px;text-align:left;color:var(--ink3);font-weight:600;padding:7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.kv td{padding:7px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.ph{background:var(--soft);border-radius:12px;height:150px;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:13px;margin-bottom:12px}
+.rep{display:grid;gap:8px;margin-bottom:12px}
+.rep div{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px}
+.rep b{display:block}
+.rep .d{flex:none;width:52px;color:var(--ink3);font-variant-numeric:tabular-nums}
+
+/* 번호 표시 */
+.mk{display:none}
+body.marks .mk{display:inline-flex;position:absolute;z-index:6;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:800;align-items:center;justify-content:center;box-shadow:0 0 0 2px #fff;pointer-events:none}
+
+/* 메모 */
+.notes h2{margin:0 0 4px;font-size:17px}
+.notes .lead{margin:0 0 14px;color:var(--ink2)}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border:1px solid #DCDFE4;border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:13px}
+.ctl select{border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+.ctl button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;font-weight:600}
+.note{display:grid;grid-template-columns:24px 1fr;gap:10px;padding:12px 0;border-top:1px solid #DCDFE4}
+.note .n{width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.note h4{margin:0 0 3px;font-size:14px}
+.note p{margin:0;color:var(--ink2);font-size:13px}
+.note .src{display:block;margin-top:3px;color:var(--ink3);font-size:12px}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px;background:#fff}
+.tbl th,.tbl td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl th{background:#22252A;color:#fff;font-weight:600}
+.box{background:#fff;border:1px solid #DCDFE4;border-radius:12px;padding:14px 16px;margin-top:16px}
+.box h3{margin:0 0 8px;font-size:14.5px}
+.box ul{margin:0;padding-left:18px;color:var(--ink2);font-size:13px}
+.box li{margin:3px 0}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .phone{width:100%;max-width:410px;margin:0 auto;height:760px}
+}
+@media (max-width:440px){
+  .phone{border-width:6px;border-radius:30px}
+}
+</style>
+<style>.top>div:first-child{display:none}.top{justify-content:flex-end}.wrap{padding-top:8px}</style></head>
+<body class="marks">
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>WTD 디지털 오너 카드 · 발급 화면 시안</h1>
+      <p>케이스 QR 스캔부터 오너 카드 발급까지 고객 휴대폰 화면 시뮬레이션. <a id="toLightTop" href="#">골프장 빛 지도 시안 ›</a></p>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div class="switch" role="tablist">
+        <button class="on" data-go="scan">1. QR 랜딩</button>
+        <button data-go="form">2. 등록</button>
+        <button data-go="card">3. 오너 카드</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="mkToggle" checked> 설명 번호</label>
+    </div>
+  </div>
+  <div class="banner">시안 · 제안 단계: 등록 혜택 · 오너 번호 체계는 확정 전. 이름 · 번호 · 제품 코드 · 골프장은 예시 값이고, 시나리오 날짜는 PENTA2 출시 뒤인 2027-03-02. 입력값은 저장되지 않으며, 빛 지도 시안과는 주소 뒤 값으로만 주고받음</div>
+
+  <div class="layout">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen" id="screen">
+
+        <!-- ① QR 랜딩 -->
+        <section class="view on" id="v-scan">
+          <div class="appbar"><span class="logo">WTD<b>.</b></span><span class="crumb">정품 등록</span></div>
+          <div class="hero">
+            <span class="ring"></span>
+            <div class="k">WTD DIGITAL OWNER CARD</div>
+            <h2 class="rel">영수증 없이 <b>A/S</b><br>30초 등록으로<span class="mk" style="right:0;top:2px">1</span></h2>
+            <p>구매처 · 구매일을 등록해 두면<br>영수증 대신 이 카드로 A/S를 접수해요</p>
+            <div class="scanned rel"><span class="mk" style="right:-8px;top:-10px">2</span>
+              <span class="lens" id="sLens"></span>
+              <span><span class="t" id="sModel"></span><br><span class="s" id="sCode"></span></span>
+              <span class="ok">✓ 정품</span>
+            </div>
+          </div>
+          <div class="sec">
+            <div class="from" id="fromStrip" style="display:none"></div>
+            <p class="lbl">등록하면 받는 것</p>
+            <ul class="bene rel"><span class="mk" style="right:-6px;top:-10px">3</span>
+              <li><span class="ic">🧾</span><span><span class="t">영수증 없이 바로 A/S 접수</span><br><span class="s">카카오 채널에서 등록 정보로 접수돼요</span></span></li>
+              <li><span class="ic">⛳</span><span><span class="t">내 골프장 라운드 알림</span><br><span class="s">봄 · 가을 시즌 전, 그 골프장 추천 렌즈 · 일출 시각</span></span></li>
+              <li><span class="ic">📋</span><span><span class="t">캐디 시즌 리포트 먼저 보기</span><br><span class="s">7월 · 11월, 공개 전에 먼저 보내 드려요</span></span></li>
+              <li><span class="ic">✨</span><span><span class="t">홀인원 각인 신청</span><br><span class="s">홀인원 하는 날, 이 고글에 새겨 드려요</span></span></li>
+            </ul>
+            <div style="display:grid;gap:8px;margin-top:18px">
+              <button class="btn kakao" data-route="kakao">💬 카카오로 1초 등록</button>
+              <button class="btn" data-route="phone">휴대폰 번호로 등록</button>
+            </div>
+            <p class="fine" style="margin:12px 0 0;text-align:center">회원가입 없이 등록돼요 · 자사몰 회원이면 자동 연결</p>
+          </div>
+        </section>
+
+        <!-- ② 등록 -->
+        <section class="view" id="v-form">
+          <div class="appbar"><button class="back" data-go="scan">‹</button><span class="crumb">정품 등록</span></div>
+          <div class="sec">
+            <div class="steps"><i class="on"></i><i class="on"></i><i></i></div>
+            <h3 class="ft">어디서 사셨어요?</h3>
+            <p class="fs">제품 정보는 QR에서 이미 받았어요. 아래만 채우면 끝</p>
+
+            <div class="field">
+              <label>휴대폰 번호<em>*</em></label>
+              <div id="fPhone"></div>
+            </div>
+
+            <div class="field">
+              <label>구매처<em>*</em></label>
+              <div class="chips" id="fShop"></div>
+              <div class="inp" id="fShopName" style="margin-top:8px;display:none"><input id="shopName" placeholder="매장 이름 (선택)"></div>
+            </div>
+
+            <div class="field">
+              <label>구매일<em>*</em><small>영수증 대신 A/S 증빙</small></label>
+              <input type="date" id="fDate" max="2027-03-02">
+            </div>
+
+            <div class="field rel"><span class="mk" style="right:0;top:-2px">4</span>
+              <label>자주 가는 골프장<small>선택 · 라운드 알림 · 빛 지도 연결</small></label>
+              <div id="fGolf"></div>
+            </div>
+
+            <div class="field">
+              <label>캐디 코드<small>선택 · 캐디에게 추천받았다면</small></label>
+              <input id="fCaddy" placeholder="예: CD-0123" maxlength="10">
+            </div>
+
+            <div class="agree">
+              <label class="chk"><input type="checkbox" id="ag1"><span><span class="req">[필수]</span> 개인정보 수집 · 이용 동의<small>휴대폰 번호 · 구매처 · 구매일, 정품 확인 · A/S 처리용</small></span></label>
+              <label class="chk"><input type="checkbox" id="ag2"><span><span class="opt">[선택]</span> 라운드 알림 · 캐디 리포트 받기<small>연 4회만: 봄 · 가을 내 골프장 알림, 7월 · 11월 리포트</small></span></label>
+            </div>
+
+            <button class="btn pri" id="submit" disabled>오너 카드 받기</button>
+            <p class="fine" style="margin:10px 0 0;text-align:center">교환 · 환불 · 수리 기준은 상품 상세페이지 품질보증 기준과 같아요</p>
+          </div>
+        </section>
+
+        <!-- ③ 오너 카드 -->
+        <section class="view" id="v-card">
+          <div class="appbar"><span class="logo">WTD<b>.</b></span><span class="crumb">내 오너 카드</span></div>
+          <div class="sec">
+            <div class="done">
+              <div class="k">등록 완료</div>
+              <h2 id="cHello"></h2>
+              <p id="cSub"></p>
+            </div>
+            <div class="rel"><span class="mk" style="right:-6px;top:-10px">5</span>
+              <div class="owner" id="ownerCard"></div>
+            </div>
+            <div class="toast">✓ <span id="cToast"></span></div>
+            <div class="acts rel" id="acts"><span class="mk" style="right:-6px;top:-10px">6</span></div>
+            <div class="card soft next rel"><span class="mk" style="right:8px;top:-8px">7</span>
+              <p class="lbl" style="margin-bottom:2px">앞으로 받을 소식</p>
+              <ul class="tl" id="cTimeline"></ul>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="issuing" id="issuing"><div class="spin"></div><p>오너 카드를 만들고 있어요</p></div>
+      <div class="dim" id="dim"></div>
+      <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+    </div>
+
+    <!-- 메모 -->
+    <div class="notes">
+      <h2>설계 메모</h2>
+      <p class="lead">등록 혜택은 「한 번 만들면 자동으로 도는 것」만 둠. 실물 발송 · 수리 · 재고가 생기는 혜택은 넣지 않고, 이미 할 프로그램(빛 지도 · 캐디 리포트)의 「먼저 받는 자리」를 등록 고객에게 줌</p>
+      <div class="ctl">
+        <span>스캔한 제품</span>
+        <select id="demoSku">
+          <option value="pink">PENTA2 · 사쿠라 핑크 (일반)</option>
+          <option value="ed">PENTA2 초판 500 · 샴페인</option>
+          <option value="lav">PENTA2 · 라벤더 (일반)</option>
+        </select>
+        <button id="demoReset">처음부터 다시</button>
+      </div>
+
+      <div class="note"><span class="n">1</span><div><h4>첫 줄 = 「영수증 없이 A/S, 30초 등록으로」</h4><p>보증 기간은 기존 기준 그대로. 등록이 영수증 역할을 대신한다는 점을 등록 동기로 씀(손해 회피)</p><span class="src">근거: 디지털 등록 퍼널 0 · 1단계, 10/29 결정(보증 연장 없음)</span></div></div>
+      <div class="note"><span class="n">2</span><div><h4>제품 정보는 QR이 대신 입력</h4><p>모델 · 색 · 생산 로트를 케이스 QR 코드에 넣어 고객 입력을 줄임. 정품 확인 표시도 여기서</p><span class="src">근거: 퍼널 2단계 「모델 · 로트는 코드에 내장」. 코드 형식은 예시</span></div></div>
+      <div class="note"><span class="n">3</span><div><h4>혜택 4줄, 운영 부담 0에 가까운 것만</h4><p>A/S 접수 간소화(오히려 확인 문의 감소) · 빛 지도 알림(자동 발송) · 캐디 리포트 선공개(이미 만드는 콘텐츠) · 홀인원 각인(건수 적음)</p><span class="src">근거: 10/29 혜택 비교(회사 번거로움 · 비용 · 판매처 충돌)</span></div></div>
+      <div class="note"><span class="n">4</span><div><h4>자주 가는 골프장 = 빛 지도와 잇는 고리</h4><p>고르면 카드에 「내 골프장」이 찍히고, 카드에서 그 골프장 빛 지도로 바로 감. 빛 지도의 「알림 받기」로 들어오면 골프장이 미리 채워짐</p><span class="src">골프장 10곳은 빛 지도 시안과 같은 가상 목록</span></div></div>
+      <div class="note"><span class="n">5</span><div><h4>오너 카드 = 오너 번호 + 구매 증빙</h4><p>일반 모델은 6자리 등록 순번, 초판 500은 1~500 번호(위 「스캔한 제품」에서 바꿔 볼 수 있음). 카드 아래 줄에 내 골프장</p><span class="src">근거: v09 정품 등록 장 · PENTA2 초판 500 기획. 번호 자릿수는 시안</span></div></div>
+      <div class="note"><span class="n">6</span><div><h4>카드 아래 메뉴 6개</h4><p>구매 증빙 · A/S 접수 · 내 골프장 빛 지도 · 캐디 리포트 · 홀인원 각인 · 피팅 영상. 홀인원 각인 신청 창구를 여기에 둠</p><span class="src">근거: 시그니처 마케팅 10판 「홀인원 각인은 등록 페이지에서 신청」</span></div></div>
+      <div class="note"><span class="n">7</span><div><h4>소식은 동의한 고객에게만, 연 4회</h4><p>동의하지 않으면 피팅 영상 안내만 남고, 그 자리에서 동의할 수 있게 둠. 골프장을 안 골랐으면 알림 줄에서 바로 고름</p><span class="src">알림에 렌즈 추천이 들어가 광고성 정보로 볼 여지(해석) → 수신 동의 고객만</span></div></div>
+
+      <div class="box">
+        <h3>회사에 남는 것 (등록 1건당)</h3>
+        <table class="tbl">
+          <tr><th>항목</th><th>쓰는 곳</th></tr>
+          <tr><td>휴대폰 · 모델 · 로트</td><td>판매처 경유 고객 연락처(PENTA 출고의 93~96%), 고장 부위 · 사용 기간 집계</td></tr>
+          <tr><td>구매처 · 구매일</td><td>판매처별 실판매 추정, 판매처 실적 인정</td></tr>
+          <tr><td>자주 가는 골프장</td><td>골프장별 고객 분포 → 빛 지도 등록 골프장 우선순위 · 캐디 리포터 모집 지역</td></tr>
+          <tr><td>캐디 코드</td><td>캐디 판매 파트너 수수료 정산</td></tr>
+        </table>
+      </div>
+
+      <div class="box">
+        <h3>공개 전에 정할 것</h3>
+        <ul>
+          <li>라운드 알림의 광고성 정보 해당 여부 · 수신 동의 문구: 법무</li>
+          <li>카카오 로그인 · 알림톡 발신 프로필과 건당 비용(연 4회 × 동의 고객 수)</li>
+          <li>카카오 채널(WTD 아이웨어) A/S 접수에 등록 정보를 붙이는 방식</li>
+          <li>A/S 때 등록 구매일을 영수증과 같게 인정할지: 품질 · CS 기준</li>
+          <li>개인정보 처리방침 개정 · 케이스 QR 가변 인쇄(인쇄업체) · 등록 페이지 구현(카페24 vs 개발)</li>
+          <li>판매처 안내 멘트 · 온라인 판매처 상세페이지 한 줄: 국내영업</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- 예시 데이터 ----------
+const LIGHT='261029_%5B전략기획%5DWTD빛지도_소비자화면시안_v02.html';
+const SKUS={
+  pink:{model:'PENTA2',color:'사쿠라 핑크',code:'W-PT2-SP-27B-0412',bg:'linear-gradient(135deg,#F7C2D2 0%,#DA7F9E 55%,#A9617E 100%)',no:128,ed:false},
+  ed:{model:'PENTA2 초판 500',color:'샴페인',code:'W-PT2-CH-ED-0057',bg:'linear-gradient(135deg,#E9D6AE 0%,#BF9F62 55%,#8E7442 100%)',no:57,ed:true},
+  lav:{model:'PENTA2',color:'라벤더',code:'W-PT2-LV-27B-1203',bg:'linear-gradient(135deg,#E3DAF7 0%,#B8A5E3 55%,#9C8BD0 100%)',no:131,ed:false}
+};
+// 빛 지도 시안과 같은 가상 골프장 (id 공유)
+const TYPES={forest:{label:'숲 · 산악',cls:'b-forest'},inland:{label:'내륙 평지',cls:'b-inland'},coast:{label:'해안 · 개활',cls:'b-coast'}};
+const COURSES=[
+  {id:'c1',name:'단풍재CC',area:'강원 홍천',type:'forest'},{id:'c2',name:'솔향기CC',area:'경기 가평',type:'forest'},
+  {id:'c3',name:'운무산CC',area:'충북 제천',type:'forest'},{id:'c4',name:'한내들CC',area:'경기 여주',type:'inland'},
+  {id:'c5',name:'미호천CC',area:'충북 청주',type:'inland'},{id:'c6',name:'금강들CC',area:'충남 부여',type:'inland'},
+  {id:'c7',name:'갯바람CC',area:'인천 영종도',type:'coast'},{id:'c8',name:'수평선CC',area:'경북 포항',type:'coast'},
+  {id:'c9',name:'물마루CC',area:'전남 여수',type:'coast'},{id:'c10',name:'돌담오름CC',area:'제주 서귀포',type:'coast'}
+];
+const SHOPS=['골프장 프로숍','골프용품 매장','안경원','온라인 판매처','WTD 자사몰','선물 받음'];
+const TODAY='2027-03-02';
+const BLANK={route:null,phone:'',sent:false,code:'',verified:false,shop:null,shopName:'',date:TODAY,golf:null,gq:'',caddy:'',ag1:false,ag2:false,from:null};
+const F=Object.assign({sku:'pink'},BLANK);
+const $=id=>document.getElementById(id);
+const screen=$('screen');
+const sku=()=>SKUS[F.sku];
+const golf=()=>COURSES.find(c=>c.id===F.golf);
+const num=()=>{const s=sku();return s.ed?String(s.no).padStart(3,'0'):String(s.no).padStart(6,'0')};
+const lightUrl=(id,extra)=>LIGHT+'?course='+id+(extra||'');
+
+// ---------- 화면 전환 ----------
+function go(v){
+  document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));
+  document.querySelectorAll('.switch button').forEach(b=>b.classList.toggle('on',b.dataset.go===v));
+  closeSheet();screen.scrollTop=0;
+  if(v==='scan')renderScan();
+  if(v==='form'){if(!F.route)F.route='kakao';renderForm()}
+  if(v==='card'){fillDemo();renderCard()}
+}
+
+// ---------- ① ----------
+function renderScan(){
+  const s=sku();
+  $('sLens').style.background=s.bg;
+  $('sModel').innerHTML=`${s.model} · ${s.color}`+(s.ed?' <span class="badge b-ed">초판</span>':'');
+  $('sCode').textContent='제품 코드 '+s.code;
+  const g=golf();
+  $('fromStrip').style.display=F.from==='light'&&g?'flex':'none';
+  if(g)$('fromStrip').innerHTML=`⛳ <span><b>${g.name}</b> 라운드 알림은 등록한 고객에게 보내 드려요</span>`;
+}
+
+// ---------- ② ----------
+function renderForm(){
+  if(F.route==='kakao'){
+    $('fPhone').innerHTML=`<div class="linked">💬 <span>카카오 계정으로 받았어요 · <b>010-****-5678</b></span></div>`;
+  }else{
+    $('fPhone').innerHTML=`<div class="inp"><input id="ph" inputmode="numeric" placeholder="010-0000-0000" value="${F.phone}" maxlength="13"><button id="sendCode">${F.sent?'다시 받기':'인증번호 받기'}</button></div>`+
+      (F.sent?`<div class="inp" style="margin-top:6px"><input id="vc" inputmode="numeric" placeholder="인증번호 6자리" value="${F.code}" maxlength="6"><button id="verify">${F.verified?'확인됨 ✓':'확인'}</button></div><div class="help">시안: 아무 6자리나 넣으면 확인돼요</div>`:'');
+    const ph=$('ph');ph.oninput=e=>{F.phone=fmtPhone(e.target.value);e.target.value=F.phone;F.verified=false;check()};
+    $('sendCode').onclick=()=>{if(F.phone.replace(/\D/g,'').length>=10){F.sent=true;renderForm()}else ph.focus()};
+    const vc=$('vc');if(vc)vc.oninput=e=>{F.code=e.target.value.replace(/\D/g,'');e.target.value=F.code;check()};
+    const vb=$('verify');if(vb)vb.onclick=()=>{if(F.code.length===6){F.verified=true;renderForm()}};
+  }
+  $('fShop').innerHTML=SHOPS.map(s=>`<button class="chip ${F.shop===s?'on':''}" data-shop="${s}">${s}</button>`).join('');
+  $('fShopName').style.display=F.shop&&F.shop!=='WTD 자사몰'&&F.shop!=='선물 받음'?'flex':'none';
+  $('shopName').value=F.shopName;
+  $('fDate').value=F.date;$('fCaddy').value=F.caddy;$('ag1').checked=F.ag1;$('ag2').checked=F.ag2;
+  renderGolf();check();
+}
+function renderGolf(){
+  const g=golf(),box=$('fGolf');
+  if(g){
+    box.innerHTML=`<div class="gsel">⛳ <b>${g.name}</b><span class="fine">${g.area}</span><span class="badge ${TYPES[g.type].cls}">${TYPES[g.type].label}</span><button class="x" data-golfx>바꾸기</button></div><div class="help">이 골프장 빛 지도와 봄 · 가을 라운드 알림이 연결돼요</div>`;
+    return;
+  }
+  const hits=F.gq?COURSES.filter(c=>(c.name+c.area).includes(F.gq)).slice(0,4):[];
+  box.innerHTML=`<div class="inp"><input id="gq" placeholder="골프장 이름 검색 (예: 솔향기)" value="${F.gq}" autocomplete="off"></div>
+    <div class="ghits">${hits.map(c=>`<button class="ghit" data-golf="${c.id}"><b>${c.name}</b><span class="fine">${c.area}</span><span class="badge ${TYPES[c.type].cls}">${TYPES[c.type].label}</span></button>`).join('')}
+    ${F.gq&&!hits.length?'<div class="help">아직 빛 지도에 없는 골프장이에요. 등록 요청으로 남겨 둘게요</div>':''}</div>`;
+  const gi=$('gq');gi.oninput=e=>{F.gq=e.target.value.trim();const p=e.target.selectionStart;renderGolf();const n=$('gq');n.focus();n.setSelectionRange(p,p)};
+}
+const fmtPhone=v=>{const d=v.replace(/\D/g,'').slice(0,11);return d.length<4?d:d.length<8?d.slice(0,3)+'-'+d.slice(3):d.slice(0,3)+'-'+d.slice(3,d.length-4)+'-'+d.slice(-4)};
+function check(){
+  const ok=(F.route==='kakao'||F.verified)&&F.shop&&F.date&&F.ag1;
+  $('submit').disabled=!ok;
+}
+$('shopName').oninput=e=>F.shopName=e.target.value;
+$('fDate').onchange=e=>{F.date=e.target.value;check()};
+$('fCaddy').oninput=e=>{F.caddy=e.target.value.toUpperCase();e.target.value=F.caddy};
+$('ag1').onchange=e=>{F.ag1=e.target.checked;check()};
+$('ag2').onchange=e=>{F.ag2=e.target.checked};
+$('submit').onclick=()=>{
+  $('issuing').classList.add('on');
+  setTimeout(()=>{$('issuing').classList.remove('on');go('card')},1300);
+};
+
+// ---------- ③ ----------
+function fillDemo(){ // ③으로 바로 넘어온 경우 예시 값 채움
+  if(!F.route)F.route='kakao';
+  if(!F.shop){F.shop='골프장 프로숍';F.shopName='○○CC 프로숍'}
+  if(!F.date)F.date=TODAY;
+  F.ag1=true;
+}
+const dot=d=>d.replaceAll('-','.');
+function renderCard(){
+  const s=sku(),g=golf(),n=num();
+  const who=F.route==='kakao'?'홍길동':'010-****-'+(F.phone.slice(-4)||'5678');
+  $('cHello').textContent=F.route==='kakao'?'홍길동 님, 환영해요':'오너 카드가 나왔어요';
+  $('cSub').textContent='구매 증빙 저장 완료 · 영수증 없이 A/S 접수';
+  $('ownerCard').innerHTML=`<span class="lines"></span><span class="frame"></span>
+    <div class="oc">
+      <div class="oc-top"><div class="brand">WTD<b>.</b><small>DIGITAL OWNER CARD</small></div><span class="lens" style="background:${s.bg}"></span></div>
+      <div class="oc-mid"><div class="model">${s.model} · ${s.color}</div><div class="no">No. <b id="noRoll">${n.replace(/\d/g,'0')}</b>${s.ed?'<span style="font-size:14px;color:#A3A6AD"> / 500</span>':''}</div></div>
+      <div class="oc-bot"><span>오너<b>${who}</b></span><span>구매<b>${dot(F.date)}</b></span><span>내 골프장<b>${g?g.name:'-'}</b></span></div>
+    </div>`;
+  roll($('noRoll'),n);
+  $('cToast').textContent=F.route==='kakao'?'카카오 알림톡으로 구매 증빙을 보냈어요':'문자로 구매 증빙 링크를 보냈어요';
+  $('acts').innerHTML=`<span class="mk" style="right:-6px;top:-10px">6</span>
+    <button class="act" data-sheet="proof"><span class="ic">🧾</span>구매<br>증빙</button>
+    <button class="act" data-sheet="as"><span class="ic">💬</span>A/S<br>바로 접수</button>
+    ${g?`<a class="act hl" href="${lightUrl(g.id,'&slot=low&owner='+n)}"><span class="ic">⛳</span>내 골프장<br>빛 지도</a>`:`<button class="act hl" data-sheet="pickgolf"><span class="ic">⛳</span>내 골프장<br>고르기</button>`}
+    <button class="act" data-sheet="report"><span class="ic">📋</span>캐디<br>시즌 리포트</button>
+    <button class="act" data-sheet="hio"><span class="ic">✨</span>홀인원<br>각인 신청</button>
+    <button class="act" data-sheet="fit"><span class="ic">📐</span>내 모델<br>피팅 영상</button>`;
+  renderTimeline();
+}
+function renderTimeline(){
+  const g=golf(),gn=g?g.name:'내 골프장';
+  const rows=[['27.03','내 모델 피팅 영상 안내',true]];
+  if(F.ag2){
+    rows.push(['27.04',g?`${gn} 봄 시즌 빛 알림 (추천 렌즈 · 일출 시각)`:`<button class="b" data-sheet="pickgolf">골프장을 고르면</button> 봄 · 가을 빛 알림`,true],
+      ['27.07','캐디 중간 리포트 먼저 보기',true],
+      ['27.09',g?`${gn} 가을 시즌 빛 알림`:'가을 빛 알림 (골프장 선택 시)',!!g],
+      ['27.11','캐디 시즌 리포트 먼저 보기',true]);
+  }else{
+    rows.push(['','<span class="off">라운드 알림 · 캐디 리포트는 동의한 고객만 받아요</span> <button class="b" id="agNow">받기</button>',true]);
+  }
+  $('cTimeline').innerHTML=rows.map(([d,t,on])=>`<li><span class="d">${d}</span><span class="${on?'':'off'}">${t}</span></li>`).join('');
+  const a=$('agNow');if(a)a.onclick=()=>{F.ag2=true;renderTimeline()};
+}
+function roll(el,target){ // 번호가 한 자리씩 멈추는 연출
+  const n=target.length;let t=0;
+  const iv=setInterval(()=>{
+    t++;const fixed=Math.floor(t/4);
+    el.textContent=target.split('').map((c,i)=>i<fixed?c:String(Math.floor(Math.random()*10))).join('');
+    if(fixed>=n){clearInterval(iv);el.textContent=target}
+  },45);
+}
+
+// ---------- 시트 ----------
+function sheetHtml(k){
+  const s=sku(),g=golf();
+  const shop=F.shop+(F.shopName?' · '+F.shopName:'');
+  if(k==='proof')return `<h3>구매 증빙</h3><p class="sub">A/S 접수 때 이 화면이 영수증을 대신해요</p>
+    <table class="kv"><tr><th>제품</th><td>${s.model} · ${s.color}</td></tr><tr><th>제품 코드</th><td>${s.code}</td></tr>
+    <tr><th>구매처</th><td>${shop}</td></tr><tr><th>구매일</th><td>${dot(F.date)}</td></tr>
+    <tr><th>오너 번호</th><td>No. ${num()}</td></tr>
+    <tr><th>교환 · 수리</th><td>상품 상세페이지 품질보증 기준<br><span class="fine">공정거래위원회 소비자분쟁해결기준에 따름</span></td></tr></table>
+    <button class="btn" data-close>닫기</button>`;
+  if(k==='as')return `<h3>A/S 바로 접수</h3><p class="sub">카카오 채널 「WTD 아이웨어」로 이어져요. 제품 · 구매처 · 구매일은 자동으로 붙어요</p>
+    <div class="chips" style="margin-bottom:12px"><button class="chip on">힌지 · 템플</button><button class="chip">코받침</button><button class="chip">렌즈</button><button class="chip">기타</button></div>
+    <div class="ph">증상 사진 올리기 (선택)</div><button class="btn kakao" data-close>💬 카카오 채널로 접수 (시안)</button>`;
+  if(k==='pickgolf')return `<h3>내 골프장 고르기</h3><p class="sub">고르면 그 골프장 빛 지도와 라운드 알림이 연결돼요</p>
+    <div class="ghits" style="margin-bottom:12px">${COURSES.map(c=>`<button class="ghit" data-pick="${c.id}"><b>${c.name}</b><span class="fine">${c.area}</span><span class="badge ${TYPES[c.type].cls}">${TYPES[c.type].label}</span></button>`).join('')}</div>
+    <button class="btn" data-close>닫기</button>`;
+  if(k==='report')return `<h3>캐디 시즌 리포트</h3><p class="sub">CADDY+ 리포터 30명이 한 시즌 써 본 기록이에요. 등록 고객에게 공개 전에 먼저 보내요</p>
+    <div class="rep"><div><span class="d">27.07</span><span><b>중간 리포트</b><span class="fine">봄 시즌 · 골프장별 빛 확인 결과</span></span></div>
+    <div><span class="d">27.11</span><span><b>시즌 리포트</b><span class="fine">한 시즌 기록 · 렌즈 색별 후기</span></span></div></div>
+    ${F.ag2?'<p class="fine" style="margin:0 0 12px">✓ 받기에 동의하셨어요. 발행되면 알림톡으로 보내 드려요</p>':'<button class="btn pri" data-agree style="margin-bottom:8px">리포트 받기 동의</button>'}
+    <button class="btn" data-close>닫기</button>`;
+  if(k==='hio')return `<h3>홀인원 각인 신청</h3><p class="sub">홀인원 하신 날 이 고글 템플 바깥쪽에 기록을 새겨 드려요</p>
+    <div class="field"><label>날짜 · 골프장 · 홀</label><div class="inp"><input value="2027-05-16" style="max-width:130px"><input placeholder="골프장" value="${g?g.name:''}"><input placeholder="홀" style="max-width:60px"></div></div>
+    <div class="field"><label>거리 · 클럽<small>선택</small></label><div class="inp"><input placeholder="152m"><input placeholder="7번 아이언"></div></div>
+    <div class="field"><label>캐디 확인<small>동반 캐디 이름 또는 캐디 코드</small></label><input placeholder="CD-0123"></div>
+    <button class="btn pri" data-close>신청하기 (시안)</button><p class="fine" style="margin:8px 0 0;text-align:center">신청하면 각인 안내와 택배 접수 방법을 보내 드려요</p>`;
+  if(k==='fit')return `<h3>내 모델 피팅 영상</h3><p class="sub">${s.model} 코받침 · 브릿지 · 템플을 얼굴에 맞추는 법</p><div class="ph">▶ 피팅 영상 (40초)</div><button class="btn" data-close>닫기</button>`;
+}
+function openSheet(k){$('sheetBody').innerHTML=sheetHtml(k);$('dim').classList.add('on');$('sheet').classList.add('on')}
+function closeSheet(){$('dim').classList.remove('on');$('sheet').classList.remove('on')}
+$('dim').onclick=closeSheet;
+
+// ---------- 이벤트 ----------
+document.addEventListener('click',e=>{
+  const el=e.target.closest('button');if(!el)return;
+  const d=el.dataset;
+  if(d.go)return go(d.go);
+  if(d.route){F.route=d.route;go('form');return}
+  if(d.shop){F.shop=d.shop;renderForm();return}
+  if(d.golf){F.golf=d.golf;F.gq='';renderGolf();return}
+  if('golfx' in d){F.golf=null;renderGolf();return}
+  if(d.pick){F.golf=d.pick;closeSheet();renderCard();return}
+  if('agree' in d){F.ag2=true;closeSheet();renderTimeline();return}
+  if(d.sheet)return openSheet(d.sheet);
+  if('close' in d)return closeSheet();
+});
+$('mkToggle').onchange=e=>document.body.classList.toggle('marks',e.target.checked);
+$('demoSku').onchange=e=>{F.sku=e.target.value;const v=document.querySelector('.view.on').id.slice(2);go(v)};
+$('demoReset').onclick=()=>{Object.assign(F,BLANK);go('scan')};
+$('toLightTop').href=LIGHT;
+
+// 빛 지도에서 넘어온 경우: ?golf=c2 (알림 받기) · ?view=card (내 오너 카드)
+(function(){
+  const p=new URLSearchParams(window.__Q||location.search);
+  const g=p.get('golf');
+  if(g&&COURSES.some(c=>c.id===g)){F.golf=g;F.from='light'}
+  if(p.get('view')==='card'){F.ag2=true;go('card')}else go('scan');
+})();
+<\/script>
+</body>
+</html>
+</script>
+<script>
+const SRC={light:document.getElementById('src-light').textContent,owner:document.getElementById('src-owner').textContent};
+const FR={light:document.getElementById('f-light'),owner:document.getElementById('f-owner')};
+// 안쪽 페이지에 넣는 연결 코드: 주소 값 전달 · 다른 시안 링크 가로채기 · 높이 보고
+function bridge(app,q){
+  return '<script>window.__Q='+JSON.stringify(q||'')+';'+
+  'document.addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;var h=a.getAttribute("href")||"";'+
+  'if(/\\.html/.test(h)){e.preventDefault();parent.postMessage({app:"'+app+'",href:h},"*")}},true);'+
+  'function rep(){parent.postMessage({app:"'+app+'",h:document.body.scrollHeight},"*")}'+
+  'addEventListener("load",function(){rep();new ResizeObserver(rep).observe(document.body)});<\/script>';
+}
+function load(app,q){
+  const html=SRC[app].replace(/<\\\/script/g,'</script');
+  FR[app].srcdoc=html.replace('<head>','<head>'+bridge(app,q));
+}
+function show(app){
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.app===app));
+  for(const k in FR)FR[k].hidden=k!==app;
+  scrollTo({top:0});
+}
+addEventListener('message',e=>{
+  const d=e.data||{};
+  if(d.h&&FR[d.app])FR[d.app].style.height=Math.max(900,d.h+10)+'px';
+  if(d.href){
+    const target=d.href.includes('오너카드')||d.href.includes('%EC%98%A4%EB%84%88')?'owner':'light';
+    const q=d.href.includes('?')?d.href.slice(d.href.indexOf('?')):'';
+    load(target,q);show(target);
+  }
+});
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.app));
+load('light','');load('owner','');
+</script>
+</body>
+</html>
