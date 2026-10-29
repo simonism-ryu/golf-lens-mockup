@@ -1244,6 +1244,7 @@ function load(app,q){
 function show(app){
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.app===app));
   for(const k in FR)FR[k].hidden=k!==app;
+  history.replaceState(null,'',app==='owner'?'#owner':location.pathname+location.search);
   scrollTo({top:0});
 }
 addEventListener('message',e=>{
@@ -1257,6 +1258,7 @@ addEventListener('message',e=>{
 });
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.app));
 load('light','');load('owner','');
+if(location.hash==='#owner')show('owner');   // 장표 QR · 링크에서 정품 등록 탭으로 바로 열기
 </script>
 </body>
 </html>
